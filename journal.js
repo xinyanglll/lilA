@@ -38,7 +38,7 @@ function renderRoute() {
 function startNote(date=localDate()) {
   editing=null;index=0;render();$('#note-date').value=date;$('#note-text').value='';$('#char-count').textContent='0 / 2000';syncNoteMood();go('mood');
 }
-function syncNoteMood() { $('#note-mood').textContent=`Feeling ${states[index].name.toLowerCase()}`;$('.note-editor').style.setProperty('--note',palette[index]); }
+function syncNoteMood() { syncEnglishDate(); $('#note-mood').textContent=`Feeling ${states[index].name.toLowerCase()}`;$('.note-editor').style.setProperty('--note',palette[index]); }
 $('#start').addEventListener('click',()=>startNote());
 $('#calendar-new').addEventListener('click',()=>startNote());
 $('#add-day').addEventListener('click',()=>startNote(selectedDay));
@@ -103,4 +103,27 @@ $('#prev-month').addEventListener('click',()=>changeMonth(-1));$('#next-month').
 $('#today').addEventListener('click',()=>{selectedDay=localDate();month=new Date(new Date().getFullYear(),new Date().getMonth(),1);renderCalendar();});
 $('#export').addEventListener('click',()=>{if(!entries.length){notify('No notes to export yet. Leave your first little thought.');return;}const url=URL.createObjectURL(new Blob([JSON.stringify({app:'lilA',version:1,exportedAt:new Date().toISOString(),notes:entries},null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download=`lilA-notes-${localDate()}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Your notes have been exported as a JSON backup.');});
 window.addEventListener('hashchange',renderRoute);
-$('#note-date').value=localDate();renderWeek();renderRoute();
+// Explicit English date parts avoid OS-localized date input text on mobile.
+const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+monthNames.forEach((name,i)=>$('#date-month').add(new Option(name,String(i+1))));
+const thisYear = new Date().getFullYear();
+for(let year=thisYear-100;year<=thisYear+10;year++) $('#date-year').add(new Option(String(year),String(year)));
+function fillDateDays(year,month,day) {
+  const last = new Date(year,month,0).getDate();
+  $('#date-day').replaceChildren();
+  for(let n=1;n<=last;n++) $('#date-day').add(new Option(String(n),String(n)));
+  $('#date-day').value=String(Math.min(day,last));
+}
+function syncEnglishDate() {
+  const value=$('#note-date').value || localDate();
+  const [year,month,day]=value.split('-').map(Number);
+  if(![...$('#date-year').options].some(o=>Number(o.value)===year)) $('#date-year').add(new Option(String(year),String(year)));
+  $('#date-month').value=String(month);$('#date-year').value=String(year);fillDateDays(year,month,day);
+}
+function updateEnglishDate() {
+  const year=Number($('#date-year').value),month=Number($('#date-month').value),day=Number($('#date-day').value)||1;
+  fillDateDays(year,month,day);
+  $('#note-date').value=`${year}-${String(month).padStart(2,'0')}-${String($('#date-day').value).padStart(2,'0')}`;
+}
+['#date-month','#date-day','#date-year'].forEach(id=>$(id).addEventListener('change',updateEnglishDate));
+$('#note-date').value=localDate();syncEnglishDate();renderWeek();renderRoute();

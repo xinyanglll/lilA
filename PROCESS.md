@@ -89,6 +89,18 @@ The final runtime has six moods: Calm, Teary, Happy, Grumpy, Anxious and Tired. 
 
 A suggestion kept: develop the expression demo into a mood → note → calendar loop, giving the character interaction a useful purpose. A suggestion changed/rejected: regenerated emotional faces and a folded-note shadow were rejected because they broke the character style or looked like unwanted paper layers. Original line eyes and w mouth were retained, and the note treatment was simplified.
 
-The student’s design feedback and automated/browser checks are not an independent participant trial. A trial with another person, observed before explaining the interface, still needs to be recorded here with the participant’s hesitation and the resulting decision. No trial result has been invented.
+The student’s design feedback and automated/browser checks are not an independent participant trial. The student subsequently reported feedback from a classmate who tried the site on a phone; see the participant trial below. The student did not report whether instructions were given beforehand, or describe a directly observed hesitation, so those details are not claimed.
 
-Development history: the process above records earlier iterations, but these working files have not yet been committed to a dedicated repository. Do not interpret the written dates as Git commit timestamps.
+Development history: the process above records earlier local iterations. The dedicated public repository was created on November 1, with separate real commits for source/documentation, artwork/audio, the font/license, and the screenshot. These upload commits do not reconstruct or backdate the earlier local history.
+
+Public deployment: GitHub Pages serves https://xinyanglll.github.io/lilA/ . A signed-out browser could access the public repository and website. The deployed mood page loaded its character and speech-bubble assets; the Anxious melody entered playback with no captured browser errors. The classmate feedback and resulting localization correction are recorded below.
+
+Mobile localization correction: the student reported Chinese date text on a phone. Replaced the native date field with explicit English month/day/year selectors; invalid month-end days are clamped to the selected month. Verified selecting February and November locally. The student later confirmed that this issue was reported by a classmate during testing.
+
+## Participant trial — mobile date localization
+
+**Feedback reported by the student:** a classmate tried lilA on a phone and noticed that the date in the note editor appeared in Chinese, although the website is designed in English. No identifying information about the classmate is included.
+
+**Decision and improvement:** the native HTML date control inherited the device/browser locale. Setting the page language alone did not ensure an English date display. It was replaced with explicit English month, numeric day and year selectors. This makes the displayed date consistent with the rest of the interface while retaining date selection and the same stored ISO date. When the user changes months, the day list updates and an out-of-range day is clamped to the last valid day.
+
+**Verification and limits:** browser checks confirmed English month labels and selection across February and November. A follow-up check by the classmate on the original phone has not yet been reported. The available feedback does not establish whether the classmate received instructions before trying the website; no such claim is made.

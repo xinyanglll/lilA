@@ -72,3 +72,5 @@ html body .day-panel .note-card[data-paper="3"]::before{background-color:#eee2b5
 html body .day-panel .note-card[data-paper="4"]::before{background-color:#f3e9c5;clip-path:polygon(0 0,99% 2%,100% 98%,79% 100%,43% 97%,1% 99%)}
 html body .day-panel .note-card:hover{transform:rotate(var(--paper-tilt,-1deg)) translateY(-1px);box-shadow:none}
 @media(prefers-reduced-motion:reduce){html body .calendar-stamp{transition:none}}
+
+.date-label{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.english-date{display:flex;align-items:center;gap:4px}.english-date select{font:inherit;font-size:12px;color:#71614b;border:0;border-bottom:1px solid #9c8b6a66;border-radius:0;background:transparent;padding:4px 1px;min-height:30px;max-width:70px}.english-date select:focus-visible{outline:2px dashed #71614b;outline-offset:2px}
